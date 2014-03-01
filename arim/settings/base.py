@@ -11,8 +11,7 @@ STATICFILES_FINDERS = (
 )
 
 TEMPLATE_LOADERS = (
-    'django.template.loaders.filesystem.Loader',
-    'django.template.loaders.app_directories.Loader',
+    'lib.jinja2_for_django.Loader',
 )
 
 MIDDLEWARE_CLASSES = (
