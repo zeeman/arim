@@ -1,3 +1,4 @@
 *.pyc
 .*.sw?
 .env
+arim/settings/local.py
