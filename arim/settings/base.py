@@ -25,13 +25,11 @@ MIDDLEWARE_CLASSES = (
 
 ROOT_URLCONF = 'arim.urls'
 
-TEMPLATE_DIRS = (
-)
-
 INSTALLED_APPS = (
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'arim',
 )
