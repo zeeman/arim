@@ -7,6 +7,18 @@
 {% block js %}{{ script(('/static/js/devices.js',)) }}{% endblock %}
 
 
+{% macro render_device(device) %}
+    <tr data-id={{ device['id'] }}>
+        <td>{{ device['description'] }}</td>
+        <td>{{ device['mac'] }}</td>
+        <td>
+            <a class="edit" href="#"><span class="glyphicon glyphicon-pencil"></span></a>
+            <a class="remove" href="#"><span class="glyphicon glyphicon-remove"></span></a>
+        </td>
+    </tr>
+{% endmacro %}
+
+
 {% block body %}
     <div class="pull-right"><a href="#">Logout</a></div>
     <div class="container">
@@ -43,28 +55,15 @@
                     <!-- cols: description, mac, actions -->
                     <thead>
                     <tr>
-                        <th>Device Description</th>
+                        <th>Description</th>
                         <th>Hardware Address</th>
                         <th>Actions</th>
                     </tr>
                     </thead>
                     <tbody>
-                    <tr>
-                        <td>Phone</td>
-                        <td>AA:AA:AA:AA:AA</td>
-                        <td>
-                            <a href="#"><span class="glyphicon glyphicon-pencil"></span></a>
-                            <a href="#"><span class="glyphicon glyphicon-remove"></span></a>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>MacBook</td>
-                        <td>AA:AA:AA:AA:AB</td>
-                        <td>
-                            <a href="#"><span class="glyphicon glyphicon-pencil"></span></a>
-                            <a href="#"><span class="glyphicon glyphicon-remove"></span></a>
-                        </td>
-                    </tr>
+                    {% for device in devices %}
+                        {{ render_device(device) }}
+                    {% endfor %}
                     </tbody>
                 </table>
             </div>

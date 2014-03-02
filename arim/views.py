@@ -16,8 +16,8 @@ def update_system(**kwargs):
 
 def get_devices():
     return [
-        {'name': 'Test system', 'mac': '01:23:45:67:89:ab', 'id': 3},
-        {'name': 'Test system 2', 'mac': '01:23:45:67:89:ac', 'id': 9},
+        {'description': 'Test system', 'mac': '01:23:45:67:89:ab', 'id': 3},
+        {'description': 'Test system 2', 'mac': '01:23:45:67:89:ac', 'id': 9},
     ]
 
 
