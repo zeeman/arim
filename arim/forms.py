@@ -5,4 +5,5 @@ from .fields import MacAddrFormField
 
 class DeviceForm(forms.Form):
     description = forms.CharField(required=True, max_length=255)
-    mac = MacAddrFormField()
+    mac = MacAddrFormField(required=True)
+    id = forms.IntegerField(required=False)

@@ -23,7 +23,7 @@
                     <div id="form-body" class="panel-body">
                         <div id="server-error" class="alert alert-danger"
                              style="display: none">A server error occurred.</div>
-                        <form role="form" method="post">
+                        <form role="form" method="post" autocomplete="off">
                             <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}" />
                             <input type="hidden" name="id" />
                             <div class="form-group">

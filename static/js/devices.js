@@ -20,7 +20,7 @@ function ajax_form_submit(form) {
     var post_data = $(form).find(':input').serializeArray();
 
     $.post(form.target, post_data, function(data) {
-        window.reload();
+        location.reload();
     }, 'json').fail(function(data) {
         if (data.status == 422) {
             set_errors(form, data.responseJSON);
