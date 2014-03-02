@@ -1,7 +1,9 @@
+import json
 from django.http import HttpResponse
 from django.shortcuts import render
 
 from .forms import DeviceForm
+from .utils import HttpResponse422
 
 
 def create_system(params):
@@ -27,6 +29,7 @@ def devices(request):
                 'description': form.description,
                 'mac': form.mac,
             })
+            return HttpResponse('{"errors": []}')
         else:
             return HttpResponse422(json.dumps(form.errors))
     elif request.method == 'GET':

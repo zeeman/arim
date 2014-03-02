@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+
+
+{% block title %}Devices{% endblock %}
+
+
+{% block js %}{{ script(('/static/js/devices.js',)) }}{% endblock %}
+
+
+{% block body %}
+    <div class="pull-right"><a href="#">Logout</a></div>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2 col-lg-6 col-lg-offset-3">
+                <div class="page-header">
+                    <h1>Wireless Device Registration</h1>
+                </div>
+                <p>Please enter descriptions and hardware addresses (also known as <a href="http://en.wikipedia.org/wiki/MAC_address">MAC addresses</a>, they are not related to the Apple "Mac" brand name) for each of your wireless devices to register them for permanent access.</p>
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4 id="form-title">Register a new device</h4>
+                    </div>
+                    <div class="panel-body">
+                        <form role="form" method="post">
+                            <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}" />
+                            <input type="hidden" name="id" />
+                            <div class="form-group">
+                                <label for="description">Description</label>
+                                <input id="description" class="form-control" type="text" name="description" />
+                            </div>
+                            <div class="form-group">
+                                <label for="mac">Hardware address</label>
+                                <input id="mac" class="form-control" type="text" name="mac" />
+                            </div>
+                            <button type="submit" class="btn btn-primary">Submit</button>
+                        </form>
+                    </div>
+                </div>
+                <p>2 of 10 devices registered.</p>
+                <table class="table">
+                    <!-- cols: description, mac, actions -->
+                    <thead>
+                    <tr>
+                        <th>Device Description</th>
+                        <th>Hardware Address</th>
+                        <th>Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>Phone</td>
+                        <td>AA:AA:AA:AA:AA</td>
+                        <td>
+                            <a href="#"><span class="glyphicon glyphicon-pencil"></span></a>
+                            <a href="#"><span class="glyphicon glyphicon-remove"></span></a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>MacBook</td>
+                        <td>AA:AA:AA:AA:AB</td>
+                        <td>
+                            <a href="#"><span class="glyphicon glyphicon-pencil"></span></a>
+                            <a href="#"><span class="glyphicon glyphicon-remove"></span></a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+{% endblock %}
