@@ -6,8 +6,15 @@ from .forms import DeviceForm
 from .utils import HttpResponse422
 
 
+device_list = [
+    {'description': 'Test system', 'mac': '01:23:45:67:89:ab', 'id': 3},
+    {'description': 'Test system 2', 'mac': '01:23:45:67:89:ac', 'id': 9},
+]
+
+
 def create_system(**kwargs):
-    pass
+    kwargs['id'] = max(d['id'] for d in device_list) + 1
+    device_list.append(kwargs)
 
 
 def update_system(**kwargs):
@@ -15,10 +22,7 @@ def update_system(**kwargs):
 
 
 def get_devices():
-    return [
-        {'description': 'Test system', 'mac': '01:23:45:67:89:ab', 'id': 3},
-        {'description': 'Test system 2', 'mac': '01:23:45:67:89:ac', 'id': 9},
-    ]
+    return device_list
 
 
 def terms(request):
@@ -43,9 +47,8 @@ def devices(request):
         else:
             return HttpResponse422(json.dumps(form.errors))
     elif request.method == 'GET':
-        devices = get_devices()
         return render(request, 'devices.html', {
-            'devices': devices,
+            'devices': get_devices(),
         })
     elif request.method == 'HEAD':
         return HttpResponse()
