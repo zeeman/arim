@@ -18,9 +18,11 @@
                 <p>Please enter descriptions and hardware addresses (also known as <a href="http://en.wikipedia.org/wiki/MAC_address">MAC addresses</a>, they are not related to the Apple "Mac" brand name) for each of your wireless devices to register them for permanent access.</p>
                 <div class="panel panel-default">
                     <div class="panel-heading">
-                        <h4 id="form-title">Register a new device</h4>
+                        <h4 id="form-heading">Register a new device</h4>
                     </div>
-                    <div class="panel-body">
+                    <div id="form-body" class="panel-body">
+                        <div id="server-error" class="alert alert-danger"
+                             style="display: none">A server error occurred.</div>
                         <form role="form" method="post">
                             <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}" />
                             <input type="hidden" name="id" />
