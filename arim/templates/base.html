@@ -1,3 +1,8 @@
+{% macro script(uris) %}
+    {% for uri in uris %}
+        <script src="{{ uri }}"></script>
+    {% endfor %}
+{% endmacro -%}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -10,11 +15,14 @@
     <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" />
     <!-- load optional bootstrap theme for pretty colors and cool vibes -->
     <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap-theme.min.css"/>
-    <script src="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+    {{ script((
+        "/static/js/jquery-1.11.0.js",
+        "http://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js",
+    )) }}
     {% block js %}{% endblock %}
 </head>
 <body>
-    {% block content %}
+    {% block body %}
         Page intentionally left blank.
     {% endblock %}
 </body>

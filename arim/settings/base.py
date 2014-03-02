@@ -4,6 +4,7 @@ TEMPLATE_DEBUG = DEBUG
 STATIC_ROOT = ''
 STATIC_URL = '/static/'
 STATICFILES_DIRS = (
+    'static/',
 )
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
