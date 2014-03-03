@@ -20,7 +20,7 @@ USE_I18N = True
 USE_L10N = True
 USE_TZ = True
 
-WSGI_APPLICATION = 'foo.wsgi.application'
+WSGI_APPLICATION = 'arim.wsgi.application'
 
 SECRET_KEY = 'nruetkdwaedt(tlsvi_o$cryf9euxi)++jf*(cx23d0f6w9zoy'
 
