@@ -3,7 +3,6 @@ from django.http import HttpResponse
 from django.shortcuts import render
 
 from .forms import DeviceForm
-from .utils import HttpResponse422
 
 
 device_list = [
@@ -45,7 +44,7 @@ def devices(request):
 
             return HttpResponse('{"errors": []}')
         else:
-            return HttpResponse422(json.dumps(form.errors))
+            return HttpResponse(json.dumps(form.errors), status=422)
     elif request.method == 'GET':
         return render(request, 'devices.html', {
             'devices': get_devices(),
