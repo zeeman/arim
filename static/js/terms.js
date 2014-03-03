@@ -4,8 +4,11 @@ $(document).ready(function() {
             !($('#agree1')[0].checked && $('#agree2')[0].checked));
     });
 
+
     $("button#submit").on('click', function(e) {
         e.preventDefault();
-        location = '/devices';
+        if ($('#agree1')[0].checked && $('#agree2')[0].checked)) {
+            location = '/devices';
+        }
     });
 });

@@ -1,9 +1,8 @@
 import json
 from django.http import HttpResponse
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 
-from .forms import DeviceForm
-from .utils import HttpResponse422
+from .forms import DeviceForm, TermsForm
 
 
 device_list = [
@@ -25,13 +24,28 @@ def get_devices():
     return device_list
 
 
+def index(request):
+    return redirect(terms)
+
+
 def terms(request):
-    if request.method == 'GET':
-        return render(request, 'terms.html')
-    elif request.method == 'HEAD':
+    if request.session.get('agreed_terms', False):
+        return redirect(devices)
+
+    if request.method == 'HEAD':
         return HttpResponse()
+    elif request.method == 'POST':
+        form = TermsForm(request.POST)
+        if form.is_valid():
+            request.session['agreed_terms'] = True
+            return redirect(devices)
+        else:
+            return render(request, 'terms.html', {
+                'error': "Please check both of the boxes below to agree to the "
+                         "policy and proceed."
+            })
     else:
-        raise Exception('Invalid request method')
+        return render(request, 'terms.html')
 
 
 def devices(request):
@@ -45,7 +59,7 @@ def devices(request):
 
             return HttpResponse('{"errors": []}')
         else:
-            return HttpResponse422(json.dumps(form.errors))
+            return HttpResponse(json.dumps(form.errors), status=422)
     elif request.method == 'GET':
         return render(request, 'devices.html', {
             'devices': get_devices(),
