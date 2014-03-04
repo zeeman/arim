@@ -6,6 +6,6 @@ $(document).ready(function() {
 
     $("button#submit").on('click', function(e) {
         e.preventDefault();
-        location = '/devices';
+        location = '/device_list';
     });
 });

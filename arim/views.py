@@ -5,15 +5,15 @@ from django.shortcuts import render
 from .forms import DeviceForm
 
 
-device_list = [
+devices = [
     {'description': 'Test system', 'mac': '01:23:45:67:89:ab', 'id': 3},
     {'description': 'Test system 2', 'mac': '01:23:45:67:89:ac', 'id': 9},
 ]
 
 
 def create_device(**kwargs):
-    kwargs['id'] = max(d['id'] for d in device_list) + 1
-    device_list.append(kwargs)
+    kwargs['id'] = max(d['id'] for d in devices) + 1
+    devices.append(kwargs)
 
 
 def update_device(**kwargs):
@@ -22,19 +22,19 @@ def update_device(**kwargs):
         raise Exception('No id provided')
     id = int(id)
 
-    dev = next(d for d in device_list if d['id'] == id)
+    dev = next(d for d in devices if d['id'] == id)
     dev['description'] = kwargs['description']
     dev['mac'] = kwargs['mac']
 
 
 def delete_device(id):
-    global device_list
-    device_list = [d for d in device_list if d['id'] != id]
+    global devices
+    devices = [d for d in devices if d['id'] != id]
 
 
 
 def get_devices():
-    return device_list
+    return devices
 
 
 def terms_view(request):
@@ -46,7 +46,7 @@ def terms_view(request):
         raise Exception('Invalid request method')
 
 
-def devices_view(request):
+def device_list_view(request):
     if request.method == 'POST':
         form = DeviceForm(request.POST)
         if form.is_valid():
@@ -59,7 +59,7 @@ def devices_view(request):
         else:
             return HttpResponse(json.dumps(form.errors), status=422)
     elif request.method == 'GET':
-        return render(request, 'devices.html', {
+        return render(request, 'device_list.html', {
             'devices': get_devices(),
         })
     else:
@@ -71,8 +71,8 @@ def device_view(request):
         if id is None:
             raise Exception('No id provided')
         id = int(id)
-        dev = next(d for d in device_list if d['id'] == id)
-        return HttpResponse(json.dumps(dev))
+        device = next(d for d in devices if d['id'] == id)
+        return HttpResponse(json.dumps(device))
     else:
         raise Exception('Invalid request method')
 
