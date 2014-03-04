@@ -12,7 +12,10 @@ devices = [
 
 
 def create_device(**kwargs):
-    kwargs['id'] = max(d['id'] for d in devices) + 1
+    if devices:
+        kwargs['id'] = max(d['id'] for d in devices) + 1
+    else:
+        kwargs['id'] = 0
     devices.append(kwargs)
 
 
