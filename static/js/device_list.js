@@ -54,13 +54,15 @@ function load_device(id) {
         $.each(data, function(name, value) {
             $('form').find('input[name=' + name + ']').val(value);
         });
-    }, 'json').fail(function(data) {
+    }, 'json').fail(function() {
         $('#device-list-server-error').slideDown(200, 'easeInQuart');
     });
 }
 
 
 function delete_device(id) {
+    $('#device-list-server-error').slideUp(200, 'easeInQuart');
+
     post_data = {
         'id': id,
         'csrfmiddlewaretoken': $('#metadata').attr('data-csrfmiddlewaretoken')
@@ -68,5 +70,7 @@ function delete_device(id) {
 
     $.post('/delete_device', post_data, function(data) {
         location.reload();
+    }).fail(function() {
+        $('#device-list-server-error').slideDown(200, 'easeInQuart');
     });
 }
