@@ -1,10 +1,12 @@
 from django.conf.urls import patterns, include, url
+from django.http import HttpResponseRedirect
 
 from .views import (terms_view, device_view, device_list_view,
                     delete_device_view)
 
 
 urlpatterns = patterns('',
+    url(r'^$', lambda x: HttpResponseRedirect('/terms')),
     url(r'^terms$', terms_view),
     url(r'^device$', device_view),
     url(r'^device_list$', device_list_view),
