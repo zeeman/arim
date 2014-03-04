@@ -8,12 +8,12 @@
 
 
 {% macro render_device(device) %}
-    <tr data-id={{ device['id'] }}>
+    <tr>
         <td>{{ device['description'] }}</td>
         <td>{{ device['mac'] }}</td>
         <td>
-            <a class="edit" href="#"><span class="glyphicon glyphicon-pencil"></span></a>
-            <a class="remove" href="#"><span class="glyphicon glyphicon-remove"></span></a>
+            <a class="edit" href="#" data-id={{ device['id'] }}><span class="glyphicon glyphicon-pencil"></span></a>
+            <a class="remove" href="#" data-id={{ device['id'] }}><span class="glyphicon glyphicon-remove"></span></a>
         </td>
     </tr>
 {% endmacro %}
@@ -40,11 +40,11 @@
                             <input type="hidden" name="id" />
                             <div class="form-group">
                                 <label for="description">Description</label>
-                                <input id="description" class="form-control" type="text" name="description" />
+                                <input class="form-control" type="text" name="description" />
                             </div>
                             <div class="form-group">
                                 <label for="mac">Hardware address</label>
-                                <input id="mac" class="form-control" type="text" name="mac" />
+                                <input class="form-control" type="text" name="mac" />
                             </div>
                             <button type="submit" class="btn btn-primary">Submit</button>
                         </form>

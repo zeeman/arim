@@ -11,13 +11,20 @@ device_list = [
 ]
 
 
-def create_system(**kwargs):
+def create_device(**kwargs):
     kwargs['id'] = max(d['id'] for d in device_list) + 1
     device_list.append(kwargs)
 
 
-def update_system(**kwargs):
-    pass
+def update_device(**kwargs):
+    id = kwargs.pop('id', None)
+    if id is None:
+        raise Exception('No id provided')
+    id = int(id)
+
+    dev = next(d for d in device_list if d['id'] == id)
+    dev['description'] = kwargs['description']
+    dev['mac'] = kwargs['mac']
 
 
 def get_devices():
@@ -38,9 +45,9 @@ def devices(request):
         form = DeviceForm(request.POST)
         if form.is_valid():
             if form.cleaned_data['id'] is None:
-                create_system(**form.cleaned_data)
+                create_device(**form.cleaned_data)
             else:
-                update_system(**form.cleaned_data)
+                update_device(**form.cleaned_data)
 
             return HttpResponse('{"errors": []}')
         else:
@@ -49,6 +56,19 @@ def devices(request):
         return render(request, 'devices.html', {
             'devices': get_devices(),
         })
+    elif request.method == 'HEAD':
+        return HttpResponse()
+    else:
+        raise Exception('Invalid request method')
+
+def device(request):
+    if request.method == 'GET':
+        id = request.GET.get('id', None)
+        if id is None:
+            raise Exception('No id provided')
+        id = int(id)
+        dev = next(d for d in device_list if d['id'] == id)
+        return HttpResponse(json.dumps(dev))
     elif request.method == 'HEAD':
         return HttpResponse()
     else:
