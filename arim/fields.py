@@ -13,8 +13,7 @@ class MacAddrFormField(forms.CharField):
     def clean(self, value):
         value = super(MacAddrFormField, self).clean(value)
 
-        value = filter(lambda x: x in "0123456789abcdef", value)
-
+        value = value.lower().replace(':', '').replace('-', '')
         if mac_pattern.match(value) is None:
             raise forms.ValidationError('Invalid MAC address')
         value = reduce(lambda x,y: x + ':' + y,
