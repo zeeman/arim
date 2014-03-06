@@ -202,37 +202,6 @@ class UserDeviceManager(object):
         c.delete(SYSTEM_ENDPOINT, pk=pk)
 
 
-
-def create_device(**kwargs):
-    if devices:
-        kwargs['id'] = max(d['id'] for d in devices) + 1
-    else:
-        kwargs['id'] = 0
-    devices.append(kwargs)
-
-
-def update_device(**kwargs):
-    id = kwargs.pop('id', None)
-    if id is None:
-        raise Exception('No id provided')
-    id = int(id)
-
-    dev = next(d for d in devices if d['id'] == id)
-    dev['description'] = kwargs['description']
-    dev['mac'] = kwargs['mac']
-
-
-def delete_device(id):
-    global devices
-    devices = [d for d in devices if d['id'] != id]
-
-
-def get_devices():
-    # Find all devices for the user
-    # /core/system?a:Other+ID={user}
-    pass
-
-
 def login_view(request):
     """
     View to handle user auth until we get Django CAS set up.
@@ -258,7 +227,6 @@ def require_login(view):
             return redirect(login_view)
         return view(request, *args, **kwargs)
     return require_login_wrapper
-
 
 
 @require_login
