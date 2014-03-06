@@ -193,7 +193,8 @@ class UserDeviceManager(object):
 
         # make sure the interface is the user's
         if next(
-                iter(filter(lambda x: x == USER_ATTR, system['systemav_set']))
+                iter(filter(lambda x: x['attribute'] == USER_ATTR,
+                            system['systemav_set']))
         )['value'] != self.username:
             return False
 
