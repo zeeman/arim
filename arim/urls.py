@@ -1,8 +1,7 @@
 from django.conf.urls import patterns, include, url
 from django.http import HttpResponseRedirect
 
-from .views import (terms_view, device_view, device_list_view,
-                    delete_device_view)
+from .views import *
 
 
 urlpatterns = patterns('',
@@ -11,4 +10,6 @@ urlpatterns = patterns('',
     url(r'^device$', device_view),
     url(r'^device_list$', device_list_view),
     url(r'^delete_device$', delete_device_view),
+    url(r'^logout$', logout_view, name="logout_view"),
+    url(r'^login$', login_view),
 )
