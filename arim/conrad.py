@@ -6,7 +6,6 @@ from time import sleep
 from django.conf import settings
 
 
-
 class Conrad(object):
     """
     Basic class for getting data from the Cyder API. This should work with API
@@ -92,7 +91,7 @@ class Conrad(object):
                self.base_url, otherwise it is sent raw.
         data - A dict containing the data to send or a JSON string.
         extra - Data to append to the path.
-        verbatim - Whether to access self.base_url + path or just path by itself
+        verbatim - If False, self.base_url is prepended to path.
         method - Used to set an alternate method if needed.
         """
         url = self.build_url(path, extra=extra, verbatim=verbatim)

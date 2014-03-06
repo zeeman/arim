@@ -47,3 +47,7 @@ LOGGING = {
         },
     }
 }
+
+# Your API key must have write access in order for this to work.
+API_KEY = None
+BASE_URL = 'http://cyder.nws.oregonstate.edu/api/v1/'
