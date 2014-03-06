@@ -35,7 +35,6 @@ function submit_form() {
 
     $('img#loading').css('display', 'inline');
     $.post(document.pathname, post_data, function(data) {
-        $('img#loading').css('display', 'none');
         location.reload();
     }, 'json').fail(function(data) {
         $('img#loading').css('display', 'none');
