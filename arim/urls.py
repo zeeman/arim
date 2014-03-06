@@ -6,7 +6,7 @@ from .views import *
 
 urlpatterns = patterns(
     '',
-    url(r'^$', lambda: HttpResponseRedirect('/terms')),
+    url(r'^$', lambda _: HttpResponseRedirect('/terms')),
     url(r'^terms$', terms_view),
     url(r'^device$', device_view),
     url(r'^device_list$', device_list_view),
