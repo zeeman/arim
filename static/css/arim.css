@@ -1,5 +1,10 @@
 .error {
-    color: red;
+	color: red;
 	font-style: italic;
 	margin-left: 5px;
+}
+
+img#loading {
+	margin-left: 5px;
+	display: none;
 }

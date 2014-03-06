@@ -33,9 +33,12 @@ function submit_form() {
     post_data['csrfmiddlewaretoken'] =
         $('#metadata').attr('data-csrfmiddlewaretoken');
 
+    $('img#loading').css('display', 'inline');
     $.post(document.pathname, post_data, function(data) {
+        $('img#loading').css('display', 'none');
         location.reload();
     }, 'json').fail(function(data) {
+        $('img#loading').css('display', 'none');
         if (data.status == 422) {
             set_errors(data.responseJSON);
         } else {

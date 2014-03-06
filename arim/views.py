@@ -35,7 +35,6 @@ def delete_device(id):
     devices = [d for d in devices if d['id'] != id]
 
 
-
 def get_devices():
     return devices
 
