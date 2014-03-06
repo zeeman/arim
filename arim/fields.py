@@ -16,7 +16,7 @@ class MacAddrFormField(forms.CharField):
         value = value.lower().replace(':', '').replace('-', '')
         if mac_pattern.match(value) is None:
             raise forms.ValidationError('Invalid MAC address')
-        value = reduce(lambda x,y: x + ':' + y,
+        value = reduce(lambda x, y: x + ':' + y,
                        (value[i:i+2] for i in xrange(0, 12, 2)))
 
         return value

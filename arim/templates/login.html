@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Please Log In</title>
+</head>
+<body>
+<form method="post">
+    <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}" />
+    <label for="username">Username:</label>
+    <input id="username" type="text" name="username"/>
+    <button type="submit">Log In</button>
+</form>
+</body>
+</html>
