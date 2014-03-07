@@ -12,14 +12,41 @@
         <td>{{ device['description'] }}</td>
         <td>{{ device['mac'] }}</td>
         <td>
-            <a class="edit" href="" data-id={{ device['id'] }}><span class="glyphicon glyphicon-pencil"></span></a>
-            <a class="delete" href="" data-id={{ device['id'] }}><span class="glyphicon glyphicon-remove"></span></a>
+            <a class="edit" href="" data-id={{ device['id'] }}>
+                <span class="glyphicon glyphicon-pencil"></span>
+            </a>
+            <a class="delete" href="" data-id={{ device['id'] }}>
+                <span class="glyphicon glyphicon-remove"></span>
+            </a>
         </td>
     </tr>
 {% endmacro %}
 
 
 {% block body %}
+    <div class="modal fade" id="deleteDeviceModal" tabindex="-1" role="dialog"
+         aria-labelledby="deleteDeviceLabel">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button class="close" type="button" data-dismiss="modal"
+                            aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="deleteDeviceLabel">
+                        Are you sure?
+                    </h4>
+                </div>
+                <div class="modal-body">
+                    <p>Deleting a device is permanent and can't be undone!
+                        Are you sure you want to continue?</p>
+                </div>
+                <div class="modal-footer">
+                    <img id="loadingDelete" class="loading" src="/static/img/loading.gif" alt="Loading...">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-danger" id="deleteDevice">Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
     <span id="metadata" data-csrfmiddlewaretoken="{{ csrf_token }}"></span>
     <div class="pull-right"><a href="{{ logout_view }}">Logout</a></div>
     <div class="container">
@@ -48,7 +75,7 @@
                                 <input class="form-control" type="text" name="mac" />
                             </div>
                             <button type="submit" class="btn btn-primary">Submit</button>
-                            <img id="loading" src="/static/img/loading.gif" alt="Loading...">
+                            <img id="loading" class="loading" src="/static/img/loading.gif" alt="Loading...">
                         </form>
                     </div>
                 </div>
