@@ -21,7 +21,8 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-    # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django_cas.middleware.CASMiddleware',
 )
 
 ROOT_URLCONF = 'arim.urls'
@@ -34,3 +35,11 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'arim',
 )
+
+AUTHENTICATION_BACKENDS = (
+    'django.contrib.auth.backends.ModelBackend',
+    'django_cas.backends.CASBackend',
+)
+
+CAS_SERVER_URL = 'https://login.oregonstate.edu/cas-dev/login'
+CAS_AUTO_CREATE_USERS = True  # Not to be used in production.

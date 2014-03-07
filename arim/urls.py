@@ -11,6 +11,6 @@ urlpatterns = patterns(
     url(r'^device$', device_view),
     url(r'^device_list$', device_list_view),
     url(r'^delete_device$', delete_device_view),
-    url(r'^logout$', logout_view, name="logout_view"),
-    url(r'^login$', login_view),
+    url(r'^logout$', 'django_cas.views.logout', name="logout_view"),
+    url(r'^login$', 'django_cas.views.login', name="login_view"),
 )

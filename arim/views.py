@@ -42,7 +42,12 @@ class UserDeviceManager(object):
             # get MAC
             # find dynamic interface by system ID
             query = {SYSTEM_QUERY_KEY: s['id']}
-            d = self.api_client.get(DYNINTR_ENDPOINT, query=query)[0]
+            d = self.api_client.get(DYNINTR_ENDPOINT, query=query)
+            if len(d):
+                d = d[0]
+            else:
+                # Invalid device. We probably don't care about it.
+                continue
 
             # pull dynamic intr MAC
             mac = d['mac']
@@ -197,8 +202,8 @@ def logout_view(request):
 
 def require_login(view):
     def require_login_wrapper(request, *args, **kwargs):
-        if not request.session.get('username', None):
-            return redirect(login_view)
+        if not request.user.is_authenticated():
+            return redirect(reverse('login_view'))
         return view(request, *args, **kwargs)
     return require_login_wrapper
 
@@ -218,7 +223,7 @@ def device_list_view(request):
     if request.method == 'POST':
         form = DeviceForm(request.POST)
         if form.is_valid():
-            udm = UserDeviceManager(request.session.get('username'))
+            udm = UserDeviceManager(request.user.username)
 
             if form.cleaned_data['id'] is None:
                 # create_device(**form.cleaned_data)
@@ -234,10 +239,11 @@ def device_list_view(request):
         else:
             return HttpResponse(json.dumps(form.errors), status=422)
     elif request.method == 'GET':
-        udm = UserDeviceManager(request.session.get('username'))
+        udm = UserDeviceManager(request.user.username)
         return render(request, 'device_list.html', {
             'devices': udm.get_all(),
-            'logout_view': reverse('logout_view')
+            'logout_view': reverse('logout_view'),
+            'user': request.user,
         })
     else:
         raise Exception('Invalid request method')
@@ -250,7 +256,7 @@ def device_view(request):
         if id is None:
             raise Exception('No id provided')
         id = int(id)
-        udm = UserDeviceManager(request.session.get('username'))
+        udm = UserDeviceManager(request.user.username)
         device = next(d for d in udm.get_all() if d['id'] == id)
         return HttpResponse(json.dumps(device))
     else:
@@ -264,7 +270,7 @@ def delete_device_view(request):
         if id is None:
             raise Exception('No id provided')
         id = int(id)
-        udm = UserDeviceManager(request.session.get('username'))
+        udm = UserDeviceManager(request.user.username)
         udm.delete(id)
         return HttpResponse()
     else:
