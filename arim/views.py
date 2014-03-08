@@ -54,33 +54,6 @@ class UserDeviceManager(object):
 
         return devices
 
-    def get(self, pk):
-        system = self.api_client.get(SYSTEM_ENDPOINT, pk=pk)
-
-        # make sure the interface is the user's
-        if next(
-                filter(lambda x: x == USER_ATTR, system['systemav_set'])
-        )['value'] != self.username:
-            return False
-
-        # get description
-        desc = next(filter(lambda x: x['attribute'] == DESC_ATTR))['value']
-
-        # find interface
-        query = {SYSTEM_QUERY_KEY: system['id']}
-        d = self.api_client.get(DYNINTR_ENDPOINT, query)
-
-        # get MAC from interface
-        mac = d['mac']
-
-        device = {
-            'id': system['id'],
-            'description': desc,
-            'mac': mac
-        }
-
-        return device
-
     def create(self, description, mac):
         # preprocess MAC
         mac = self.process_mac(mac)
