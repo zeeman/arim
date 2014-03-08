@@ -19,7 +19,7 @@ SYSTEM_DETAIL_ENDPOINT = \
 SYSTEM_ATTR_ENDPOINT = 'core/system/attributes'
 DYNINTR_ENDPOINT = 'dhcp/dynamic_interface'
 
-DYNINTR_RANGE = BASE_URL + 'dhcp/range/188/'
-DYNINTR_CTNR = BASE_URL + 'core/ctnr/107/'
+DYNINTR_RANGE = BASE_URL + 'dhcp/range/{}/'.format(settings.PUBLIC_RANGE_PK)
+DYNINTR_CTNR = BASE_URL + 'core/ctnr/{}/'.format(settings.PUBLIC_CTNR_PK)
 
 SYSTEM_NAME = 'public-{}-Wireless'
