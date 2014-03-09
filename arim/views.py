@@ -47,15 +47,16 @@ class UserDeviceManager(object):
             # get MAC
             # find dynamic interface by system ID
             query = {SYSTEM_QUERY_KEY: s['id']}
-            d = self.api_client.get(DYNINTR_ENDPOINT, query=query)[0]
-
-            # pull dynamic intr MAC
-            mac = d['mac']
-            devices.append({
-                'id': s['id'],
-                'description': desc,
-                'mac': mac,
-            })
+            interfaces = self.api_client.get(DYNINTR_ENDPOINT, query=query)
+            if interfaces:
+                d = interfaces[0]
+                # pull dynamic intr MAC
+                mac = d['mac']
+                devices.append({
+                    'id': s['id'],
+                    'description': desc,
+                    'mac': mac,
+                })
 
         return devices
 
