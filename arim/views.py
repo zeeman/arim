@@ -1,5 +1,6 @@
 import json
 from hashlib import md5
+from itertools import ifilter
 from string import hexdigits
 from time import time
 
@@ -10,6 +11,7 @@ from django.shortcuts import redirect, render
 from .conrad import Conrad
 from .constants import *
 from .forms import DeviceForm
+from .utils import first
 
 
 class UserDeviceManager(object):
@@ -34,10 +36,13 @@ class UserDeviceManager(object):
         devices = []
         for s in systems:
             # get description (Hardware type)
-            desc = next(
-                iter(filter(lambda x: x['attribute'] == DESC_ATTR,
-                            s['systemav_set']))
-            )['value']
+            description_eav = first(
+                ifilter(lambda x: x['attribute'] == DESC_ATTR,
+                        s['systemav_set']))
+            if description_eav is None:
+                desc = ''
+            else:
+                desc = description_eav['value']
 
             # get MAC
             # find dynamic interface by system ID
@@ -106,23 +111,25 @@ class UserDeviceManager(object):
         system_data = self.api_client.get(SYSTEM_ENDPOINT, pk=pk)
 
         # make sure the interface is the user's
-        owner = next(iter(
-            filter(lambda x: x['attribute'] == USER_ATTR,
-                   system_data['systemav_set']))
-        )['value']
-        if owner != self.username:
+        owner_eav = first(filter(lambda x: x['attribute'] == USER_ATTR,
+                                 system_data['systemav_set']))
+        if not owner_eav:
+            raise Exception('Owner does not exist')
+        if owner_eav['value'] != self.username:
             return False
 
         # get description url
         # id is a HyperlinkedIdentityField so we don't need to process it
-        hardware_type_url = next(
-            iter(filter(lambda x: x['attribute'] == DESC_ATTR,
-                        system_data['systemav_set']))
-        )['id']
+        description_eav = first(
+            ifilter(lambda x: x['attribute'] == DESC_ATTR,
+                    system_data['systemav_set']))
+        if not description_eav:
+            raise Exception('No description')
+        description_url = description_eav['id']
 
         # update hardware type (description)
         hardware_type_data = {"value": description}
-        self.api_client.patch(hardware_type_url, pk=None,
+        self.api_client.patch(description_url, pk=None,
                               data=hardware_type_data, verbatim=True)
 
         # find the dynamic interface
@@ -139,12 +146,13 @@ class UserDeviceManager(object):
         system = self.api_client.get(SYSTEM_ENDPOINT, pk=pk)
 
         # make sure the interface is the user's
-        if next(
-                iter(filter(lambda x: x['attribute'] == USER_ATTR,
-                            system['systemav_set']))
-        )['value'] != self.username:
-            return False
+        interface = first(ifilter(lambda x: x['attribute'] == USER_ATTR,
+                                  system['systemav_set']))
+        if interface is None:
+            raise Exception('Interface with pk {} does not exist'.format(pk))
 
+        if interface['value'] != self.username:
+            return False
         # delete the system (the attrs and interface are deleted automatically)
         self.api_client.delete(SYSTEM_ENDPOINT, pk=pk)
 
@@ -224,7 +232,7 @@ def device_view(request):
             raise Exception('No id provided')
         id = int(id)
         udm = UserDeviceManager(request.session.get('username'))
-        device = next(d for d in udm.get_all() if d['id'] == id)
+        device = first(ifilter(lambda d: d['id'] == id, udm.get_all()))
         return HttpResponse(json.dumps(device))
     else:
         raise Exception('Invalid request method')
