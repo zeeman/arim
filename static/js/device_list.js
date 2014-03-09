@@ -28,7 +28,9 @@ function submit_form() {
     form = $('form');
 
     form.find('span.error').remove();
-    $('#form-server-error').slideUp(200, 'easeInQuart');
+    form_error = $('#form-error');
+    form_error.slideUp(200, 'easeInQuart');
+
     var post_data = form.find(':input').serializeArray();
     post_data['csrfmiddlewaretoken'] =
         $('#metadata').attr('data-csrfmiddlewaretoken');
@@ -41,14 +43,17 @@ function submit_form() {
         if (data.status == 422) {
             set_errors(data.responseJSON);
         } else {
-            $('#form-server-error').slideDown(200, 'easeInQuart');
+            form_error.html('A server error occurred.');
+            form_error.slideDown(200, 'easeInQuart');
         };
     });
 }
 
 
 function load_device(id) {
+    $('#form-error').slideUp(200, 'easeInQuart');
     $('#device-list-server-error').slideUp(200, 'easeInQuart');
+    $(':input').attr('disabled', false);
 
     $('#form-title').html('Change a device');
 
