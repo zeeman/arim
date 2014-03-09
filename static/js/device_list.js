@@ -66,11 +66,12 @@ function load_device(id) {
     });
 }
 
+
 function confirm_delete_device(id) {
     btn = $('button#deleteDevice');
-    
+
     btn.attr('data-id', id);
-    
+
     btn.on('click', function(event) {
         event.preventDefault();
         $('img#loadingDelete').css('display', 'inline');
@@ -78,6 +79,7 @@ function confirm_delete_device(id) {
     });
     $("#deleteDeviceModal").modal();
 }
+
 
 function delete_device(id) {
     $('#device-list-server-error').slideUp(200, 'easeInQuart');
