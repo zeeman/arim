@@ -2,9 +2,10 @@ from hashlib import md5
 from string import hexdigits
 from time import time
 from arim.conrad import Conrad
-from arim.constants import API_KEY, BASE_URL, USER_QUERY_KEY, SYSTEM_ENDPOINT, DESC_ATTR, SYSTEM_QUERY_KEY, DYNINTR_ENDPOINT, USER_ATTR, SYSTEM_NAME, SYSTEM_DETAIL_ENDPOINT, SYSTEM_ATTR_ENDPOINT, DYNINTR_RANGE, DYNINTR_CTNR
-
-__author__ = 'zane'
+from arim.constants import (
+    API_KEY, BASE_URL, USER_QUERY_KEY, SYSTEM_ENDPOINT, DESC_ATTR,
+    SYSTEM_QUERY_KEY, DYNINTR_ENDPOINT, USER_ATTR, SYSTEM_NAME,
+    SYSTEM_DETAIL_ENDPOINT, SYSTEM_ATTR_ENDPOINT, DYNINTR_RANGE, DYNINTR_CTNR)
 
 
 class UserDeviceManager(object):
@@ -17,7 +18,7 @@ class UserDeviceManager(object):
         self.api_client = api_client or Conrad(API_KEY, BASE_URL)
 
     def get_all(self):
-        # get all of the user's devices
+        """get all of the user's devices"""
 
         # first get the list of systems
         query = {USER_QUERY_KEY: self.username}

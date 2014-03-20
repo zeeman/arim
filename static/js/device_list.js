@@ -46,6 +46,7 @@ function submit_form() {
     });
 }
 
+// helper function to get reference to a given device's table row
 function get_tr(id) {
     return $("tr[data-id=" + id + "]");
 }
