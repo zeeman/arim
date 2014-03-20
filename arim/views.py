@@ -3,10 +3,12 @@ import json
 from django.core.urlresolvers import reverse
 from django.http import HttpResponse
 from django.shortcuts import redirect, render
+
 from arim.udm import UserDeviceManager
+from arim.models import Autoreg
 
 from .forms import DeviceForm
-from .utils import first
+from .utils import first, ip_str_to_long
 
 
 def login_view(request):
@@ -46,6 +48,15 @@ def terms_view(request):
         raise Exception('Invalid request method')
 
 
+def detect_mac(request):
+    ip = ip_str_to_long(request.META.get('REMOTE_ADDR'))
+    ar = Autoreg.objects.using('maintain').filter(ip=ip).all()
+    if len(ar):
+        return ar[0].mac
+    else:
+        return None
+
+
 @require_login
 def device_list_view(request):
     if request.method == 'POST':
@@ -72,6 +83,7 @@ def device_list_view(request):
             'devices': udm.get_all(),
             'logout_view': reverse('logout_view'),
             'user': request.user,
+            'mac_address': detect_mac(request),
         })
     else:
         raise Exception('Invalid request method')
