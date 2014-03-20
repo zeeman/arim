@@ -65,14 +65,14 @@
                              style="display: none">A server error occurred.</div>
                         <form role="form" method="post" autocomplete="off" id="device-form">
                             <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}" />
-                            <input type="hidden" name="id" />
+                            <input type="hidden" id="id" name="id" />
                             <div class="form-group">
                                 <label for="description">Description</label>
-                                <input class="form-control" type="text" name="description" id="description" maxlength="17"/>
+                                <input class="form-control" type="text" name="description" id="description"/>
                             </div>
                             <div class="form-group">
                                 <label for="mac">Hardware address</label>
-                                <input class="form-control" type="text" name="mac" id="mac" />
+                                <input class="form-control" type="text" name="mac" id="mac" maxlength="17" />
                             </div>
                             <button type="submit" class="btn btn-primary">Submit</button>
                             <img id="loading" class="loading" src="/static/img/loading.gif" alt="Loading...">

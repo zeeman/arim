@@ -57,6 +57,7 @@ function load_device(id) {
 
     // the data is already on the page, so we pull it from there
     tr = get_tr(id);
+    $('form#device-form').find('input#id').val(tr.find('a.edit').attr('data-id'));
     $('form#device-form').find('input#description').val(tr.find('td.device-description').text());
     $('form#device-form').find('input#mac').val(tr.find('td.device-mac').text());
 }
