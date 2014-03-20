@@ -6,6 +6,7 @@ from django.shortcuts import redirect, render
 from arim.udm import UserDeviceManager
 
 from .forms import DeviceForm
+from .utils import first
 
 
 def login_view(request):
@@ -84,7 +85,7 @@ def device_view(request):
             raise Exception('No id provided')
         id = int(id)
         udm = UserDeviceManager(request.user.username)
-        device = next(d for d in udm.get_all() if d['id'] == id)
+        device = first(ifilter(lambda d: d['id'] == id, udm.get_all()))
         return HttpResponse(json.dumps(device))
     else:
         raise Exception('Invalid request method')
