@@ -1,161 +1,14 @@
 import json
-from hashlib import md5
-from itertools import ifilter
-from string import hexdigits
-from time import time
 
 from django.core.urlresolvers import reverse
 from django.http import HttpResponse
 from django.shortcuts import redirect, render
 
-from .conrad import Conrad
-from .constants import *
+from arim.udm import UserDeviceManager
+from arim.models import Autoreg
+
 from .forms import DeviceForm
-from .utils import first
-
-
-class UserDeviceManager(object):
-    @staticmethod
-    def process_mac(mac):
-        return filter(lambda x: x in hexdigits, mac)
-
-    def __init__(self, user, api_client=None):
-        self.username = user
-        self.api_client = api_client or Conrad(API_KEY, BASE_URL)
-
-    def get_all(self):
-        # get all of the user's devices
-
-        # first get the list of systems
-        query = {USER_QUERY_KEY: self.username}
-        systems = self.api_client.get(SYSTEM_ENDPOINT, query=query)
-        while self.api_client.get_next():
-            systems += self.api_client.result['results']
-
-        # now add MAC info
-        devices = []
-        for s in systems:
-            # get description (Hardware type)
-            description_eav = first(
-                ifilter(lambda x: x['attribute'] == DESC_ATTR,
-                        s['systemav_set']))
-            if description_eav is None:
-                desc = ''
-            else:
-                desc = description_eav['value']
-
-            # get MAC
-            # find dynamic interface by system ID
-            query = {SYSTEM_QUERY_KEY: s['id']}
-            interfaces = self.api_client.get(DYNINTR_ENDPOINT, query=query)
-            if interfaces:
-                d = interfaces[0]
-                # pull dynamic intr MAC
-                mac = d['mac']
-                devices.append({
-                    'id': s['id'],
-                    'description': desc,
-                    'mac': mac,
-                })
-
-        return devices
-
-    def create(self, description, mac):
-        # preprocess MAC
-        mac = self.process_mac(mac)
-
-        # generate a unique identifier
-        m = md5()
-        m.update(mac + '-' + str(time()))
-        hash = m.hexdigest()
-
-        # create the new system
-        system_data = {'name': SYSTEM_NAME.format(hash)}
-        system_resp = self.api_client.post(SYSTEM_ENDPOINT, system_data)
-        system_id = system_resp['id']
-
-        # The entity field in the core/system/attributes endpoint is a
-        # HyperlinkedRelatedField, so we have to send it the URL corresponding
-        # to the system, instead of just a primary key.
-        system_url = SYSTEM_DETAIL_ENDPOINT(system_id)
-
-        # create other ID attribute
-        other_id_data = {
-            "entity": system_url,
-            "attribute": USER_ATTR,
-            "value": self.username
-        }
-        self.api_client.post(SYSTEM_ATTR_ENDPOINT, other_id_data)
-
-        # create hardware type attribute
-        hardware_type_data = {
-            "entity": system_url,
-            "attribute": DESC_ATTR,
-            "value": description
-        }
-        self.api_client.post(SYSTEM_ATTR_ENDPOINT, hardware_type_data)
-
-        # create dynamic intr
-        interface_data = {
-            "mac": mac,
-            "range": DYNINTR_RANGE,
-            "system": system_url,
-            "ctnr": DYNINTR_CTNR
-        }
-        self.api_client.post(DYNINTR_ENDPOINT, interface_data)
-
-    def update(self, pk, description, mac):
-        # preprocess mac
-        mac = self.process_mac(mac)
-
-        # get the system
-        system_data = self.api_client.get(SYSTEM_ENDPOINT, pk=pk)
-
-        # make sure the interface is the user's
-        owner_eav = first(filter(lambda x: x['attribute'] == USER_ATTR,
-                                 system_data['systemav_set']))
-        if not owner_eav:
-            raise Exception('Owner does not exist')
-        if owner_eav['value'] != self.username:
-            return False
-
-        # get description url
-        # id is a HyperlinkedIdentityField so we don't need to process it
-        description_eav = first(
-            ifilter(lambda x: x['attribute'] == DESC_ATTR,
-                    system_data['systemav_set']))
-        if not description_eav:
-            raise Exception('No description')
-        description_url = description_eav['id']
-
-        # update hardware type (description)
-        hardware_type_data = {"value": description}
-        self.api_client.patch(description_url, pk=None,
-                              data=hardware_type_data, verbatim=True)
-
-        # find the dynamic interface
-        interface_query = {SYSTEM_QUERY_KEY: system_data['id']}
-        interface_data = self.api_client.get(DYNINTR_ENDPOINT,
-                                             query=interface_query)[0]
-
-        interface_update_data = {"mac": mac}
-        self.api_client.patch(DYNINTR_ENDPOINT, pk=interface_data['id'],
-                              data=interface_update_data)
-
-    def delete(self, pk):
-        # get the system
-        system = self.api_client.get(SYSTEM_ENDPOINT, pk=pk)
-
-        # make sure the interface is the user's
-        interface = first(ifilter(lambda x: x['attribute'] == USER_ATTR,
-                                  system['systemav_set']))
-        if interface is None:
-            raise Exception('Interface with pk {} does not exist'.format(pk))
-
-        if interface['value'] != self.username:
-            return False
-        # delete the system (the attrs and interface are deleted automatically)
-        self.api_client.delete(SYSTEM_ENDPOINT, pk=pk)
+from .utils import first, ip_str_to_long
 
 
 def login_view(request):
@@ -179,8 +32,8 @@ def logout_view(request):
 
 def require_login(view):
     def require_login_wrapper(request, *args, **kwargs):
-        if not request.session.get('username', None):
-            return redirect(login_view)
+        if not request.user.is_authenticated():
+            return redirect(reverse('login_view'))
         return view(request, *args, **kwargs)
     return require_login_wrapper
 
@@ -195,12 +48,21 @@ def terms_view(request):
         raise Exception('Invalid request method')
 
 
+def detect_mac(request):
+    ip = ip_str_to_long(request.META.get('REMOTE_ADDR'))
+    ar = Autoreg.objects.using('leases').filter(ip=ip).all()
+    if len(ar):
+        return ar[0].mac
+    else:
+        return None
+
+
 @require_login
 def device_list_view(request):
     if request.method == 'POST':
         form = DeviceForm(request.POST)
         if form.is_valid():
-            udm = UserDeviceManager(request.session.get('username'))
+            udm = UserDeviceManager(request.user.username)
 
             if form.cleaned_data['id'] is None:
                 # create_device(**form.cleaned_data)
@@ -216,10 +78,12 @@ def device_list_view(request):
         else:
             return HttpResponse(json.dumps(form.errors), status=422)
     elif request.method == 'GET':
-        udm = UserDeviceManager(request.session.get('username'))
+        udm = UserDeviceManager(request.user.username)
         return render(request, 'device_list.html', {
             'devices': udm.get_all(),
-            'logout_view': reverse('logout_view')
+            'logout_view': reverse('logout_view'),
+            'user': request.user,
+            'mac_address': detect_mac(request),
         })
     else:
         raise Exception('Invalid request method')
@@ -232,7 +96,7 @@ def device_view(request):
         if id is None:
             raise Exception('No id provided')
         id = int(id)
-        udm = UserDeviceManager(request.session.get('username'))
+        udm = UserDeviceManager(request.user.username)
         device = first(ifilter(lambda d: d['id'] == id, udm.get_all()))
         return HttpResponse(json.dumps(device))
     else:
@@ -246,7 +110,7 @@ def delete_device_view(request):
         if id is None:
             raise Exception('No id provided')
         id = int(id)
-        udm = UserDeviceManager(request.session.get('username'))
+        udm = UserDeviceManager(request.user.username)
         udm.delete(id)
         return HttpResponse()
     else:

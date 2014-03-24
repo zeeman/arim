@@ -1,13 +1,23 @@
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': 'arim.db',
+    'default': {  # arim's main database
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'arimdb',
         'USER': '',
         'PASSWORD': '',
         'HOST': '',
         'PORT': '',
-    }
+    },
+    'leases': {  # the database containing the lease table
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'maintain',
+        'USER': '',
+        'PASSWORD': '',
+        'HOST': '',
+        'PORT': '',
+    },
 }
+
+LEASE_TABLE = 'autoreg'
 
 ADMINS = (
 )
@@ -54,3 +64,6 @@ BASE_URL = 'http://cyder.nws.oregonstate.edu/api/v1/'
 
 PUBLIC_RANGE_PK = 0
 PUBLIC_CTNR_PK = 0
+
+CAS_SERVER_URL = 'https://login.oregonstate.edu/cas-dev/login'
+CAS_AUTO_CREATE_USERS = True  # Not to be used in production.

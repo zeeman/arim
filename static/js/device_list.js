@@ -13,6 +13,12 @@ $(document).ready(function() {
         event.preventDefault();
         confirm_delete_device($(this).attr('data-id'));
     });
+
+    $('a#prefill-mac').on('click', function(event) {
+        $('form#device-form').find('input#mac').val(
+            $(this).attr('data-mac')
+        );
+    });
 });
 
 
@@ -49,6 +55,10 @@ function submit_form() {
     });
 }
 
+// helper function to get reference to a given device's table row
+function get_tr(id) {
+    return $("tr[data-id=" + id + "]");
+}
 
 function load_device(id) {
     $('#form-error').slideUp(200, 'easeInQuart');
@@ -57,13 +67,11 @@ function load_device(id) {
 
     $('#form-title').html('Change a device');
 
-    $.get('/device?id=' + id, function(data) {
-        $.each(data, function(name, value) {
-            $('form').find('input[name=' + name + ']').val(value);
-        });
-    }, 'json').fail(function() {
-        $('#device-list-server-error').slideDown(200, 'easeInQuart');
-    });
+    // the data is already on the page, so we pull it from there
+    tr = get_tr(id);
+    $('form#device-form').find('input#id').val(tr.find('a.edit').attr('data-id'));
+    $('form#device-form').find('input#description').val(tr.find('td.device-description').text());
+    $('form#device-form').find('input#mac').val(tr.find('td.device-mac').text());
 }
 
 
@@ -90,9 +98,14 @@ function delete_device(id) {
     };
 
     $.post('/delete_device', post_data, function(data) {
-        location.reload();
+        //location.reload();
+        tr = get_tr(id);
+        tr.fadeOut(200, function(){ tr.remove(); });
+        num_span = $('span#number-of-devices');
+        num_span.text(parseInt(num_span.text()) - 1);
     }).fail(function() {
         $('img#loadingDelete').css('display', 'none');
         $('#device-list-server-error').slideDown(200, 'easeInQuart');
     });
+    $("#deleteDeviceModal").modal('hide');
 }

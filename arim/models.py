@@ -1,10 +1,12 @@
 from django.db import models
 from ipaddr import IPv4Address
 
+from arim.settings import LEASE_TABLE
+
 
 class Lease(models.Model):
     class Meta:
-        db_table = 'autoreg'
+        db_table = LEASE_TABLE
 
     mac = models.CharField(max_length=17, db_index=True)
     ip = models.IntegerField(primary_key=True)
