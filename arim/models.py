@@ -1,7 +1,7 @@
 from django.db import models
 
 
-class Autoreg(models.Model):
+class Lease(models.Model):
     class Meta:
         db_table = 'autoreg'
 
