@@ -40,6 +40,3 @@ AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
     'django_cas.backends.CASBackend',
 )
-
-CAS_SERVER_URL = 'https://login.oregonstate.edu/cas-dev/login'
-CAS_AUTO_CREATE_USERS = True  # Not to be used in production.
