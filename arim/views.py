@@ -50,7 +50,7 @@ def terms_view(request):
 
 def detect_mac(request):
     ip = ip_str_to_long(request.META.get('REMOTE_ADDR'))
-    ar = Autoreg.objects.using('maintain').filter(ip=ip).all()
+    ar = Autoreg.objects.using('leases').filter(ip=ip).all()
     if len(ar):
         return ar[0].mac
     else:

@@ -1,13 +1,23 @@
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': 'arim.db',
+    'default': {  # arim's main database
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'arimdb',
         'USER': '',
         'PASSWORD': '',
         'HOST': '',
         'PORT': '',
-    }
+    },
+    'leases': {  # the database containing the lease table
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'maintain',
+        'USER': '',
+        'PASSWORD': '',
+        'HOST': '',
+        'PORT': '',
+    },
 }
+
+LEASE_TABLE = 'autoreg'
 
 ADMINS = (
 )
