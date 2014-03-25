@@ -76,15 +76,16 @@ function load_device(id) {
 
 
 function confirm_delete_device(id) {
+    $('#device-list-server-error').slideUp(200, 'easeInQuart');
+
     btn = $('button#deleteDevice');
-
     btn.attr('data-id', id);
-
     btn.on('click', function(event) {
         event.preventDefault();
         $('img#loadingDelete').css('display', 'inline');
         delete_device($(this).attr('data-id'));
     });
+
     $("#deleteDeviceModal").modal();
 }
 
@@ -103,6 +104,7 @@ function delete_device(id) {
         tr.fadeOut(200, function(){ tr.remove(); });
         num_span = $('span#number-of-devices');
         num_span.text(parseInt(num_span.text()) - 1);
+        $('img#loadingDelete').css('display', 'none');
     }).fail(function() {
         $('img#loadingDelete').css('display', 'none');
         $('#device-list-server-error').slideDown(200, 'easeInQuart');
