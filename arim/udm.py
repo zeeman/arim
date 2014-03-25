@@ -1,11 +1,13 @@
 from hashlib import md5
 from string import hexdigits
 from time import time
+
 from arim.conrad import Conrad
 from arim.constants import (
     API_KEY, BASE_URL, USER_QUERY_KEY, SYSTEM_ENDPOINT, DESC_ATTR,
     SYSTEM_QUERY_KEY, DYNINTR_ENDPOINT, USER_ATTR, SYSTEM_NAME,
     SYSTEM_DETAIL_ENDPOINT, SYSTEM_ATTR_ENDPOINT, DYNINTR_RANGE, DYNINTR_CTNR)
+from arim.utils import first
 
 
 class UserDeviceManager(object):
@@ -30,20 +32,19 @@ class UserDeviceManager(object):
         devices = []
         for s in systems:
             # get description (Hardware type)
-            desc = next(
-                iter(filter(lambda x: x['attribute'] == DESC_ATTR,
-                            s['systemav_set']))
-            )['value']
+            desc_eavs = filter(lambda x: x['attribute'] == DESC_ATTR,
+                               s['systemav_set'])
+            if not desc_eavs:
+                continue
+            desc = desc_eavs[0]['value']
 
             # get MAC
             # find dynamic interface by system ID
             query = {SYSTEM_QUERY_KEY: s['id']}
-            d = self.api_client.get(DYNINTR_ENDPOINT, query=query)
-            if len(d):
-                d = d[0]
-            else:
-                # Invalid device. We probably don't care about it.
+            ds = self.api_client.get(DYNINTR_ENDPOINT, query=query)
+            if not ds:
                 continue
+            d = ds[0]
 
             # pull dynamic intr MAC
             mac = d['mac']
