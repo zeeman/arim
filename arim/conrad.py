@@ -2,8 +2,10 @@ import json
 import urllib
 import urllib2
 from time import sleep
-
 from django.conf import settings
+from sys import stderr
+
+from arim.settings import DEBUG
 
 
 class Conrad(object):
@@ -56,7 +58,7 @@ class Conrad(object):
         req = urllib2.Request(url)
         req.add_header('Authorization', 'Token ' + self.token)
 
-        resp = urllib2.urlopen(req)
+        resp = self.do_request(req)
 
         self.result_str = resp.read()
         self.response_code = resp.code
@@ -108,7 +110,7 @@ class Conrad(object):
         # handle non-POST requests
         if method:
             request.get_method = lambda: method.upper()
-        response = urllib2.urlopen(request)
+        response = self.do_request(request)
         content = json.loads(response.read())
         return content
 
@@ -127,7 +129,7 @@ class Conrad(object):
         # request.add_header('Content-Type', 'application/json')
         request.get_method = lambda: "DELETE"
 
-        response = urllib2.urlopen(request)
+        response = self.do_request(request)
         content = response.read()
         return content
 
@@ -152,3 +154,17 @@ class Conrad(object):
             url += query
 
         return url
+
+    def do_request(self, request):
+        if DEBUG:
+            try:
+                return urllib2.urlopen(request)
+            except urllib2.HTTPError as e:
+                stderr.write(u"API request failed\n")
+                stderr.write(u'    ' + request.get_full_url() + u'\n')
+                stderr.write(u'    ' + request.get_data() + u'\n')
+                stderr.write(u''.join(u'    ' + line + u'\n'
+                                      for line in e.fp.read().splitlines()))
+                raise
+        else:
+            return urllib2.urlopen(request)
