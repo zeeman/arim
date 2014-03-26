@@ -1,6 +1,8 @@
 from hashlib import md5
 from string import hexdigits
+from sys import stderr
 from time import time
+import urllib2
 
 from arim.conrad import Conrad
 from arim.constants import (
@@ -102,30 +104,34 @@ class UserDeviceManager(object):
         # to the system, instead of just a primary key.
         system_url = SYSTEM_DETAIL_ENDPOINT(system_id)
 
-        # create other ID attribute
-        other_id_data = {
-            "entity": system_url,
-            "attribute": USER_ATTR,
-            "value": self.username
-        }
-        self.api_client.post(SYSTEM_ATTR_ENDPOINT, other_id_data)
+        try:
+            # create other ID attribute
+            other_id_data = {
+                "entity": system_url,
+                "attribute": USER_ATTR,
+                "value": self.username
+            }
+            self.api_client.post(SYSTEM_ATTR_ENDPOINT, other_id_data)
 
-        # create hardware type attribute
-        hardware_type_data = {
-            "entity": system_url,
-            "attribute": DESC_ATTR,
-            "value": description
-        }
-        self.api_client.post(SYSTEM_ATTR_ENDPOINT, hardware_type_data)
+            # create hardware type attribute
+            hardware_type_data = {
+                "entity": system_url,
+                "attribute": DESC_ATTR,
+                "value": description
+            }
+            self.api_client.post(SYSTEM_ATTR_ENDPOINT, hardware_type_data)
 
-        # create dynamic intr
-        interface_data = {
-            "mac": mac,
-            "range": DYNINTR_RANGE,
-            "system": system_url,
-            "ctnr": DYNINTR_CTNR
-        }
-        self.api_client.post(DYNINTR_ENDPOINT, interface_data)
+            # create dynamic intr
+            interface_data = {
+                "mac": mac,
+                "range": DYNINTR_RANGE,
+                "system": system_url,
+                "ctnr": DYNINTR_CTNR
+            }
+            self.api_client.post(DYNINTR_ENDPOINT, interface_data)
+        except urllib2.HTTPError:
+            self.delete(system_id)
+            raise
 
     def update(self, pk, description, mac):
         # preprocess mac
