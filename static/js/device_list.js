@@ -14,7 +14,7 @@ $(document).ready(function() {
         confirm_delete_device($(this).attr('data-id'));
     });
 
-    $('a#prefill-mac').on('click', function(event) {
+    $('button#prefill-mac').on('click', function(event) {
         $('form#device-form').find('input#mac').val(
             $(this).attr('data-mac')
         );
