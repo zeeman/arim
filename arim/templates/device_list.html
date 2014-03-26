@@ -75,11 +75,11 @@
                             <div class="form-group">
                                 <label for="mac">Hardware address</label>
                                 <input class="form-control" type="text" name="mac" id="mac" {% if full %}disabled{% endif %} />
-                                {% if mac_address %}
-                                <span class="help-block"><a href="#" class="btn btn-default btn-xs" id="prefill-mac" data-mac="{{ mac_address }}">Detect This Computer's Address</a></span>
-                                {% endif %}
                             </div>
                             <button type="submit" class="btn btn-primary" {% if full %}disabled {% endif %}>Submit</button>
+                            {% if mac_address %}
+                            <button type="button" class="btn" id="prefill-mac" data-mac="{{ mac_address }}">Detect This Computer's Address</button>
+                            {% endif %}
                             <img id="loading" class="loading" src="/static/img/loading.gif" alt="Loading...">
                         </form>
                     </div>
