@@ -14,6 +14,9 @@ framework.
 
 """
 import os
+import sys
+
+sys.path.append('/data/arim')
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "arim.settings")
 
