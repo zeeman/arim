@@ -76,7 +76,7 @@
                                 <label for="mac">Hardware address</label>
                                 <input class="form-control" type="text" name="mac" id="mac" {% if full %}disabled{% endif %} />
                             </div>
-                            <button type="submit" class="btn btn-primary" {% if full %}disabled {% endif %}>Submit</button>
+                            <button type="submit" class="btn btn-primary" {% if full %}disabled {% endif %}>Register</button>
                             {% if mac_address %}
                             <button type="button" class="btn" id="prefill-mac" data-mac="{{ mac_address }}">Detect This Computer's Address</button>
                             {% endif %}

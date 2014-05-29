@@ -80,7 +80,8 @@ function load_device(id) {
     $('#device-list-server-error').slideUp(200, 'easeInQuart');
     $(':input').attr('disabled', false);
 
-    $('#form-title').html('Change a device');
+    $('#form-title').html('Modify a device');
+    $('button[type=submit]').html('Modify');
 
     // the data is already on the page, so we pull it from there
     tr = get_tr(id);
