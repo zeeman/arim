@@ -78,7 +78,6 @@ function get_tr(id) {
 function load_device(id) {
     $('#form-error').slideUp(200, 'easeInQuart');
     $('#device-list-server-error').slideUp(200, 'easeInQuart');
-    $(':input').attr('disabled', false);
 
     $('#form-title').html('Modify a device');
     $('button[type=submit]').html('Modify');
