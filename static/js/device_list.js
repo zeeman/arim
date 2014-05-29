@@ -39,16 +39,18 @@ function submit_form() {
 
     var post_data = form.find(':input').serializeArray();
 
-    if ($('input#id').val() == "") {
-        var form_mac = $('input#mac').val();
-        var conflict = $('td.device-mac').filter(
-            function() { return this.innerHTML == form_mac; }).length != 0;
-        if (conflict) {
-            form_error.html(
-                'A device with this hardware address is already registered!');
-            form_error.slideDown(200, 'easeInQuart');
-            return;
-        }
+    var id = $('input#id').val();
+    var mac = $('input#mac').val();
+    function is_duplicate() {
+        return $(this).find('td.device-mac').html() == mac
+            && $(this).attr('data-id') != id;
+    }
+    var conflict = $('tr[data-id]').filter(is_duplicate).length != 0;
+    if (conflict) {
+        form_error.html(
+            "You've already registered a device with this MAC address.");
+        form_error.slideDown(200, 'easeInQuart');
+        return;
     }
 
     post_data['csrfmiddlewaretoken'] =
