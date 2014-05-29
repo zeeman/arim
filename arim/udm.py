@@ -143,17 +143,17 @@ class UserDeviceManager(object):
         # make sure the interface is the user's
         owner = next(iter(
             filter(lambda x: x['attribute'] == USER_ATTR,
-                   system_data['systemav_set']))
-        )['value']
+                   system_data['systemav_set'])
+        ))['value']
         if owner != self.username:
             return False
 
         # get description url
         # id is a HyperlinkedIdentityField so we don't need to process it
-        hardware_type_url = next(
-            iter(filter(lambda x: x['attribute'] == DESC_ATTR,
-                        system_data['systemav_set']))
-        )['id']
+        hardware_type_url = next(iter(
+            filter(lambda x: x['attribute'] == DESC_ATTR,
+                   system_data['systemav_set'])
+        ))['id']
 
         # update hardware type (description)
         hardware_type_data = {"value": description}
