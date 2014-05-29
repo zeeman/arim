@@ -6,12 +6,12 @@ $(document).ready(function() {
 
     $('a.edit').on('click', function(event) {
         event.preventDefault();
-        device = load_device($(this).attr('data-id'));
+        device = load_device($(this).closest('tr').attr('data-id'));
     });
 
     $('a.delete').on('click', function(event) {
         event.preventDefault();
-        confirm_delete_device($(this).attr('data-id'));
+        confirm_delete_device($(this).closest('tr').attr('data-id'));
     });
 
     $('a#prefill-mac').on('click', function(event) {
@@ -69,7 +69,7 @@ function load_device(id) {
 
     // the data is already on the page, so we pull it from there
     tr = get_tr(id);
-    $('form#device-form').find('input#id').val(tr.find('a.edit').attr('data-id'));
+    $('form#device-form').find('input#id').val(tr.attr('data-id'));
     $('form#device-form').find('input#description').val(tr.find('td.device-description').text());
     $('form#device-form').find('input#mac').val(tr.find('td.device-mac').text());
 }
