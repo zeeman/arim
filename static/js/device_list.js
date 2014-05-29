@@ -38,6 +38,19 @@ function submit_form() {
     form_error.slideUp(200, 'easeInQuart');
 
     var post_data = form.find(':input').serializeArray();
+
+    if ($('input#id').val() == "") {
+        var form_mac = $('input#mac').val();
+        var conflict = $('td.device-mac').filter(
+            function() { return this.innerHTML == form_mac; }).length != 0;
+        if (conflict) {
+            form_error.html(
+                'A device with this hardware address is already registered!');
+            form_error.slideDown(200, 'easeInQuart');
+            return;
+        }
+    }
+
     post_data['csrfmiddlewaretoken'] =
         $('#metadata').attr('data-csrfmiddlewaretoken');
 
