@@ -23,6 +23,7 @@ $(document).ready(function() {
     $('button#reset-form').on('click', function(event) {
         clear_form_errors();
         $('#form-title').html('Register a new device');
+        $('button[type=submit]').html('Register');
     });
 });
 
