@@ -22,7 +22,7 @@ $(document).ready(function() {
 });
 
 
-function set_errors(errors) {
+function set_form_errors(errors) {
     $.each(errors, function (name, text) {
         $('form').find('label[for=' + name + ']').first().after(
             '<span class="error">' + text + '</span>');
@@ -30,12 +30,17 @@ function set_errors(errors) {
 }
 
 
-function submit_form() {
-    form = $('form');
+function clear_form_errors() {
+    $('form').find('span.error').remove();
+    $('#form-error').slideUp(200, 'easeInQuart');
+}
 
-    form.find('span.error').remove();
-    form_error = $('#form-error');
-    form_error.slideUp(200, 'easeInQuart');
+
+function submit_form() {
+    var form = $('form');
+    var form_error = $('#form-error');
+
+    clear_form_errors();
 
     var post_data = form.find(':input').serializeArray();
 
@@ -62,7 +67,7 @@ function submit_form() {
     }, 'json').fail(function(data) {
         $('img#loading').css('display', 'none');
         if (data.status == 422) {
-            set_errors(data.responseJSON);
+            set_form_errors(data.responseJSON);
         } else {
             form_error.html('A server error occurred.');
             form_error.slideDown(200, 'easeInQuart');
@@ -76,7 +81,7 @@ function get_tr(id) {
 }
 
 function load_device(id) {
-    $('#form-error').slideUp(200, 'easeInQuart');
+    clear_form_errors();
     $('#device-list-server-error').slideUp(200, 'easeInQuart');
 
     $('#form-title').html('Modify a device');
