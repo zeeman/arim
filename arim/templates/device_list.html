@@ -64,7 +64,7 @@
                              style="display: none">A server error occurred.</div>
                         <form role="form" method="post" autocomplete="off" id="device-form">
                         <div id="form-error" class="alert alert-danger"
-                            {% if not full %}style="display: none" {% endif %}>You have registered 10 devices. Delete a device before trying to add another.</div>
+                            {% if not full %}style="display: none;" {% endif %}>You have registered 10 devices. Delete a device before trying to add another.</div>
                         <form role="form" method="post" autocomplete="off">
                             <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
                             <input type="hidden" id="id" name="id">
