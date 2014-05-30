@@ -19,6 +19,11 @@ $(document).ready(function() {
             $(this).attr('data-mac')
         );
     });
+
+    $('button#reset-form').on('click', function(event) {
+        clear_form_errors();
+        $('#form-title').html('Register a new device');
+    });
 });
 
 
@@ -61,10 +66,12 @@ function submit_form() {
     post_data['csrfmiddlewaretoken'] =
         $('#metadata').attr('data-csrfmiddlewaretoken');
 
+    $('button#reset-form').css('display', 'none');
     $('img#loading').css('display', 'inline');
     $.post(document.pathname, post_data, function(data) {
         location.reload();
     }, 'json').fail(function(data) {
+        $('button#reset-form').css('display', 'inline-block');
         $('img#loading').css('display', 'none');
         if (data.status == 422) {
             set_form_errors(data.responseJSON);
