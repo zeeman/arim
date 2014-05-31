@@ -21,9 +21,7 @@ $(document).ready(function() {
     });
 
     $('button#reset-form').on('click', function(event) {
-        clear_form_errors();
-        $('#form-title').html('Register a new device');
-        $('button[type=submit]').html('Register');
+        reset_form();
     });
 });
 
@@ -39,6 +37,13 @@ function set_form_errors(errors) {
 function clear_form_errors() {
     $('form').find('span.error').remove();
     $('#form-error').slideUp(200, 'easeInQuart');
+}
+
+
+function reset_form() {
+    clear_form_errors();
+    $('#form-title').html('Register a new device');
+    $('button[type=submit]').html('Register');
 }
 
 
@@ -119,6 +124,12 @@ function confirm_delete_device(id) {
         event.preventDefault();
         $('img#loadingDelete').css('display', 'inline');
         delete_device($(this).attr('data-id'));
+
+        if ($('input#id').val() == id) {
+            $('input#id').val('');
+            $('#form-title').html('Register a new device');
+            $('button[type=submit]').html('Register');
+        }
     });
 
     $("#deleteDeviceModal").modal();
