@@ -83,14 +83,21 @@ function submit_form() {
     });
 }
 
+
 // helper function to get reference to a given device's table row
 function get_tr(id) {
     return $("tr[data-id=" + id + "]");
 }
 
+
+function clear_device_list_errors() {
+    $('#device-list-server-error').slideUp(200, 'easeInQuart');
+}
+
+
 function load_device(id) {
     clear_form_errors();
-    $('#device-list-server-error').slideUp(200, 'easeInQuart');
+    clear_device_list_errors();
 
     $('#form-title').html('Modify a device');
     $('button[type=submit]').html('Modify');
@@ -104,7 +111,7 @@ function load_device(id) {
 
 
 function confirm_delete_device(id) {
-    $('#device-list-server-error').slideUp(200, 'easeInQuart');
+    clear_device_list_errors();
 
     btn = $('button#deleteDevice');
     btn.attr('data-id', id);
@@ -119,7 +126,7 @@ function confirm_delete_device(id) {
 
 
 function delete_device(id) {
-    $('#device-list-server-error').slideUp(200, 'easeInQuart');
+    clear_device_list_errors();
 
     post_data = {
         'id': id,
