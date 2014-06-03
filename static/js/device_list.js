@@ -42,6 +42,7 @@ function clear_form_errors() {
 
 function reset_form() {
     clear_form_errors();
+    $('input[name=id]').val('');
     $('#form-title').html('Register a new device');
     $('button[type=submit]').html('Register');
 }
