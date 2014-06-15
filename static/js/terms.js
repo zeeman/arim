@@ -8,4 +8,6 @@ $(document).ready(function() {
         e.preventDefault();
         location = '/device_list';
     });
+
+    $("div#noscript").hide();
 });
