@@ -22,7 +22,7 @@
 {% set full = (devices|length == 10) %}
 
 {% block navbar_content %}
-    <p class="navbar-text">Welcome, {{ user.username }}!</p>
+    <p class="navbar-text hidden-xs">Welcome, {{ user.username }}!</p>
     <ul class="nav navbar-nav pull-right">
         <li><a href="{{ logout_view }}">Logout</a></li>
     </ul>
