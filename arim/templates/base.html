@@ -31,6 +31,19 @@
     {% block js %}{% endblock %}
 </head>
 <body>
+    <nav id="tophat" class="navbar navbar-static-top navbar-inverse hidden-xs">
+        <div class="container">
+            <div class="tag">
+                <img src="http://oregonstate.edu/img/core/osu-tag.png"
+                     alt="Oregon State University"/>
+            </div>
+            <p class="navbar-brand">
+                Oregon State Wireless Self Registration
+            </p>
+            {% block navbar_content %}
+            {% endblock %}
+        </div>
+    </nav>
     {% block body %}
         Page intentionally left blank.
     {% endblock %}

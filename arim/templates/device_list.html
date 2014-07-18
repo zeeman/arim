@@ -21,6 +21,13 @@
 
 {% set full = (devices|length == 10) %}
 
+{% block navbar_content %}
+    <p class="navbar-text">Welcome, {{ user.username }}!</p>
+    <ul class="nav navbar-nav pull-right">
+        <li><a href="{{ logout_view }}">Logout</a></li>
+    </ul>
+{% endblock %}
+
 
 {% block body %}
     <div class="modal fade" id="deleteDeviceModal" tabindex="-1" role="dialog"
@@ -47,9 +54,8 @@
         </div>
     </div>
     <span id="metadata" data-csrfmiddlewaretoken="{{ csrf_token }}"></span>
-    <div class="container">
+    <div class="container" id="main">
         <div class="row">
-            <div>Welcome, {{ user.username }}!<span class="pull-right"><a href="{{ logout_view }}">Logout</a></span></div>
             <div class="col-md-8 col-md-offset-2 col-lg-6 col-lg-offset-3">
                 <div class="page-header">
                     <h1>Wireless Device Registration</h1>
