@@ -38,3 +38,13 @@ nav .tag img {
 #main {
     clear: both;
 }
+
+.page-header {
+    margin-top: 0;
+}
+
+.container {
+    max-width: 730px;
+    padding-left: 10px;
+    padding-right: 10px;
+}

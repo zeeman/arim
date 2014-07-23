@@ -157,4 +157,5 @@ function delete_device(id) {
         $('#device-list-server-error').slideDown(200, 'easeInQuart');
     });
     $("#deleteDeviceModal").modal('hide');
+    location.reload();
 }
