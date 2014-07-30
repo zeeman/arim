@@ -9,3 +9,42 @@ img.loading {
 	margin-right: 5px;
 	display: none;
 }
+
+nav#tophat {
+    height: 55px !important;
+    position: relative;
+    z-index: 20;
+    width: 100%;
+}
+
+nav#tophat:after {
+    clear: both;
+}
+
+nav .tag {
+    float: left;
+    margin-left: 1.231em;
+    margin-right: 1.5em;
+    position: relative;
+    z-index: 51;
+    padding: 0;
+    border: medium none;
+}
+
+nav .tag img {
+    box-sizing: border-box;
+}
+
+#main {
+    clear: both;
+}
+
+.page-header {
+    margin-top: 0;
+}
+
+.container {
+    max-width: 730px;
+    padding-left: 10px;
+    padding-right: 10px;
+}
