@@ -22,7 +22,6 @@
 {% set full = (devices|length == 10) %}
 
 {% block navbar_content %}
-    <p class="navbar-text hidden-xs">Welcome, {{ user.username }}!</p>
     <ul class="nav navbar-nav pull-right">
         <li><a href="{{ logout_view }}">Logout</a></li>
     </ul>
@@ -59,7 +58,7 @@
                 <div class="page-header">
                     <h1>Wireless Device Registration</h1>
                 </div>
-                <p>Enter a device's information to register it for network access.</p>
+                <p>Welcome, {{ user.username }}! Enter a device's information to register it for network access.</p>
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         <h4 id="form-title">Register a new device</h4>
@@ -80,7 +79,8 @@
                             <div class="form-group">
                                 <label for="mac">Hardware address</label>
                                 <input class="form-control" type="text" name="mac" id="mac" {% if full %}disabled{% endif %}>
-                                <p class="help-block">(A hardware address, also known as a MAC address, is a unique string of letters and numbers, optionally separated by colons or hyphens, that identifies your computer. It is not related to the Apple "Mac" brand.)</p>
+                                <p class="help-block">A hardware address, also known as a MAC address, is a unique string of letters and numbers, optionally separated by colons or hyphens, that identifies your computer. It is not related to the Apple "Mac" brand.
+                                    <a href="http://oregonstate.edu/helpdocs/network/resnet-getting-started/help-guides/finding-your-network-adapter-address">Click here for help locating your computer's hardware address.</a></p>
                             </div>
                             <button type="submit" class="btn btn-primary" {% if full %}disabled {% endif %}>Register</button>
                             {% if mac_address %}
